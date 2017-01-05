@@ -810,10 +810,14 @@ class TextEditorComponent
     {@fontSize, @fontFamily, @lineHeight} = getComputedStyle(@getTopmostDOMNode())
 
     if @fontSize isnt oldFontSize or @fontFamily isnt oldFontFamily or @lineHeight isnt oldLineHeight
+      originalBufferPosition = @editor.bufferPositionForScreenPosition([screenRow, screenCol])
       @clearPoolAfterUpdate = true
       @measureLineHeightAndDefaultCharWidth()
       @invalidateMeasurements()
 
+      if originalBufferPosition.row > 0
+        newPixelPosition = @editor.pixelPositionForBufferPosition(originalBufferPosition)
+        @editor.setScrollTop(newPixelPosition.top)
   sampleBackgroundColors: (suppressUpdate) ->
     {backgroundColor} = getComputedStyle(@hostElement)
     @presenter.setBackgroundColor(backgroundColor)
